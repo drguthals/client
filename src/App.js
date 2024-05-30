@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [url, setUrl] = useState('');
+  const [shortUrl, setShortUrl] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const response = await axios.post('http://localhost:3000/create-link', { url, userId: '123' });
+    setShortUrl(response.data.shortUrl);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter URL" required />
+        <button type="submit">Shorten</button>
+      </form>
+      {shortUrl && <a href={`http://localhost:3000/${shortUrl}`}>http://localhost:3000/{shortUrl}</a>}
     </div>
   );
 }
